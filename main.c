@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 22:27:57 by viporten          #+#    #+#             */
-/*   Updated: 2021/11/25 02:52:59 by viporten         ###   ########.fr       */
+/*   Updated: 2021/11/25 05:39:07 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	printf("philo : %d %d %d %d %d",inf.nbr_p,inf.time_die,inf.time_eat,inf.time_sleep,inf.time_time_eat);
-	go_to_life(inf);
+	go_to_life(&inf);
 
 
 }
