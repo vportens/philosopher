@@ -13,7 +13,9 @@ FLAGS 	= -g -Wall -Wextra
 LIB =  -L/usr/include
 
 SRCS =		main.c						\
-			go_to_life.c
+			go_to_life.c				\
+			init.c						\
+			destroy_all.c
 
 SRCS_BONUS =
 
