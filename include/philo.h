@@ -26,6 +26,7 @@ struct	s_philo
 	t_inf	inf;
 	unsigned long long	time_start;
 	unsigned long long	time_life;
+	int					time_manger;
 	pthread_mutex_t	*fork_r;
 	pthread_mutex_t	*fork_l;
 	int				*lock_r;

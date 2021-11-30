@@ -6,20 +6,21 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/11/30 14:20:19 by laclide          ###   ########.fr       */
+/*   Updated: 2021/11/30 15:31:02 by laclide          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-unsigned long long	update_cur_time(unsigned long long start)
+unsigned long long	update_cur_time(t_philo *moi)
 {
 	struct timeval	tv;
 	unsigned long long	ret;
 
 	gettimeofday(&tv, NULL);
-	ret = (((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - start);
+	ret = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - moi->time_life;
+	moi->time_manger = moi->time_manger + ret;
 	return (ret);
 }
 
@@ -33,13 +34,27 @@ unsigned long long	update_start(void)
 	return (ret);
 }
 
-/*
+
 void	write_status(t_philo *moi, int status)
 {
-
-
+	char	*str;
+	moi->time_life = update_start();
+	str = ft_itoa(moi->time_life - moi->time_start);
+	write(1, str, ft_strlen(str)); 
+	write(1, " id : ", 6);
+	write(1, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
+	if (status == 1)
+		write(1, " mange\n", 7);
+	else if (status == 2)
+		write(1, " dort\n", 6);
+	else if (status == 3)
+		write(1, " pense\n", 7);
+	else if (status == 4)
+		write(1, " a finit de manger\n", ft_strlen(" a finit de manger\n"));
+	else if (status == 5)
+		write(1, " meurt\n", 7);
 }
-*/
+
 
 void	eat_one(t_philo *moi)
 {
@@ -49,26 +64,21 @@ void	eat_one(t_philo *moi)
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
 	pthread_mutex_lock(moi->out);
-	write(2, ft_itoa((int)update_cur_time(moi->time_start)), ft_strlen(ft_itoa((int)update_cur_time(moi->time_start))));
-	write(2, " id :", 4);
-	write(2, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
-	write(2, "mange\n", 6);
+	write_status(moi, 1);
 	pthread_mutex_unlock(moi->out);
-	while (t < moi->inf.time_eat)
+	while (t < moi->inf.time_eat * 1000)
 	{
-		if (moi->inf.time_eat - t > 2)
-			usleep(2000);
+		if (moi->inf.time_eat * 1000 - t > 400)
+			usleep(400);
 		else
-			usleep((moi->inf.time_eat - t) * 1000);
-		t = t + 2;
-
-		if (moi->inf.time_die < (int)update_cur_time(moi->time_life))
+			usleep((moi->inf.time_eat * 1000 - t));
+		t = t + 400;
+		if (moi->inf.time_die < (int)update_cur_time(moi))
 		{
 			*(moi->dead) = 1;
 			pthread_mutex_unlock(moi->fork_r);
 			pthread_mutex_unlock(moi->fork_l);
 			return ;
-			
 		}
 		//check la mort
 	}
@@ -84,19 +94,16 @@ void	eat_two(t_philo *moi)
 	pthread_mutex_lock(moi->fork_l);
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->out);
-	write(2, ft_itoa((int)update_cur_time(moi->time_start)), ft_strlen(ft_itoa((int)update_cur_time(moi->time_start))));
-	write(2, " id :", 4);
-	write(2, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
-	write(2, "mange\n", 6);
+	write_status(moi, 1);
 	pthread_mutex_unlock(moi->out);
-	while (t < moi->inf.time_eat)
+	while (t < moi->inf.time_eat * 1000)
 	{
-		if (moi->inf.time_eat - t > 2)
-			usleep(2000);
+		if (moi->inf.time_eat * 1000 - t > 400)
+			usleep(400);
 		else
-			usleep((moi->inf.time_eat - t) * 1000);
-		t = t + 2;
-		if (moi->inf.time_die < (int)update_cur_time(moi->time_life))
+			usleep((moi->inf.time_eat * 1000 - t));
+		t = t + 400;
+		if (moi->inf.time_die < (int)update_cur_time(moi))
 		{
 			*(moi->dead) = 1;
 			pthread_mutex_unlock(moi->fork_r);
@@ -138,24 +145,21 @@ int	routine(t_philo *moi)
 		if (*(moi->dead) == 1)
 		{
 			pthread_mutex_lock(moi->out);
-			write(1, "il est mort\n", 12);
+			write_status(moi, 5);
 			pthread_mutex_unlock(moi->out);
 			return (0);
 		}
 		moi->time_life = update_start();
+		moi->time_manger = 0;
 		if (i == moi->inf.time_time_eat)
 		{
 			pthread_mutex_lock(moi->out);
-			write(2, "id :", 3);
-			write(2, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
-			write(2, "a fini de manger\n", ft_strlen("a fini de manger\n"));
+			write_status(moi, 4);
 			pthread_mutex_unlock(moi->out);
 			return (0);
 		}
 		pthread_mutex_lock(moi->out);
-		write(2, "id :", 3);
-		write(2, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
-		write(2, "dort\n", 5);
+		write_status(moi, 2);
 		pthread_mutex_unlock(moi->out);
 		usleep(moi->inf.time_sleep);
 	}

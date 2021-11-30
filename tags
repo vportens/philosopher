@@ -73,9 +73,11 @@ t_inf	include/philo.h	/^}				t_inf;$/;"	t	typeref:struct:s_inf
 t_philo	include/philo.h	/^typedef struct	s_philo		t_philo;$/;"	t	typeref:struct:s_philo
 time_die	include/philo.h	/^	int	time_die;$/;"	m	struct:s_inf
 time_eat	include/philo.h	/^	int	time_eat;$/;"	m	struct:s_inf
+time_life	include/philo.h	/^	unsigned long long	time_life;$/;"	m	struct:s_philo
 time_reset	include/philo.h	/^	int	time_reset;$/;"	m	struct:s_inf
 time_sleep	include/philo.h	/^	int	time_sleep;$/;"	m	struct:s_inf
 time_start	include/philo.h	/^	unsigned long long	time_start;$/;"	m	struct:s_philo
 time_time_eat	include/philo.h	/^	int	time_time_eat;$/;"	m	struct:s_inf
-update_cur_time	go_to_life.c	/^unsigned long long	update_cur_time(unsigned long long start)$/;"	f
+update_cur_time	go_to_life.c	/^unsigned long long	update_cur_time(t_philo *moi)$/;"	f
 update_start	go_to_life.c	/^unsigned long long	update_start(void)$/;"	f
+write_status	go_to_life.c	/^void	write_status(t_philo *moi, int status)$/;"	f
