@@ -26,11 +26,8 @@ struct	s_philo
 	t_inf	inf;
 	unsigned long long	time_start;
 	unsigned long long	time_life;
-	int					time_manger;
 	pthread_mutex_t	*fork_r;
 	pthread_mutex_t	*fork_l;
-	int				*lock_r;
-	int				*lock_l;
 	pthread_mutex_t	*out;
 };
 
@@ -40,5 +37,9 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf);
 
 void	destroy_all_mutex(t_philo **start, int nbr_to_destroy);
 int	free_defore_init_fork(t_philo **start, pthread_mutex_t *out, int *dead, int ret);
+
+int	check_death(t_philo *moi);
+unsigned long long	get_time(void);
+void	write_status(t_philo *moi, int status);
 
 #endif

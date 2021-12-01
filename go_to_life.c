@@ -6,66 +6,23 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/11/30 15:31:02 by laclide          ###   ########.fr       */
+/*   Updated: 2021/12/01 18:24:19 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-unsigned long long	update_cur_time(t_philo *moi)
-{
-	struct timeval	tv;
-	unsigned long long	ret;
-
-	gettimeofday(&tv, NULL);
-	ret = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - moi->time_life;
-	moi->time_manger = moi->time_manger + ret;
-	return (ret);
-}
-
-unsigned long long	update_start(void)
-{
-	struct timeval	tv;
-	unsigned long long	ret;
-
-	gettimeofday(&tv, NULL);
-	ret = (((tv.tv_sec * 1000) + (tv.tv_usec / 1000)));
-	return (ret);
-}
-
-
-void	write_status(t_philo *moi, int status)
-{
-	char	*str;
-	moi->time_life = update_start();
-	str = ft_itoa(moi->time_life - moi->time_start);
-	write(1, str, ft_strlen(str)); 
-	write(1, " id : ", 6);
-	write(1, ft_itoa(moi->id), ft_strlen(ft_itoa(moi->id)));
-	if (status == 1)
-		write(1, " mange\n", 7);
-	else if (status == 2)
-		write(1, " dort\n", 6);
-	else if (status == 3)
-		write(1, " pense\n", 7);
-	else if (status == 4)
-		write(1, " a finit de manger\n", ft_strlen(" a finit de manger\n"));
-	else if (status == 5)
-		write(1, " meurt\n", 7);
-}
-
-
-void	eat_one(t_philo *moi)
+void	eat_one(t_philo **cur)
 {
 	int	t;
+	t_philo *moi;
 
+	moi = *cur;
 	t = 0;
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
-	pthread_mutex_lock(moi->out);
 	write_status(moi, 1);
-	pthread_mutex_unlock(moi->out);
 	while (t < moi->inf.time_eat * 1000)
 	{
 		if (moi->inf.time_eat * 1000 - t > 400)
@@ -73,7 +30,7 @@ void	eat_one(t_philo *moi)
 		else
 			usleep((moi->inf.time_eat * 1000 - t));
 		t = t + 400;
-		if (moi->inf.time_die < (int)update_cur_time(moi))
+		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
 			pthread_mutex_unlock(moi->fork_r);
@@ -86,24 +43,28 @@ void	eat_one(t_philo *moi)
 	pthread_mutex_unlock(moi->fork_l);
 }
 
-void	eat_two(t_philo *moi)
+void	eat_two(t_philo **cur)
 {
 	int	t;
+	t_philo *moi;
 
+	moi = *cur;
 	t = 0;
 	pthread_mutex_lock(moi->fork_l);
 	pthread_mutex_lock(moi->fork_r);
-	pthread_mutex_lock(moi->out);
 	write_status(moi, 1);
-	pthread_mutex_unlock(moi->out);
 	while (t < moi->inf.time_eat * 1000)
 	{
 		if (moi->inf.time_eat * 1000 - t > 400)
+		{
 			usleep(400);
+		}
 		else
+		{
 			usleep((moi->inf.time_eat * 1000 - t));
+		}
 		t = t + 400;
-		if (moi->inf.time_die < (int)update_cur_time(moi))
+		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
 			pthread_mutex_unlock(moi->fork_r);
@@ -125,8 +86,7 @@ int	routine(t_philo *moi)
 	struct timeval		tv;
 
 //	gettimeofday(&tv, NULL);
-//	moi->time_start = ((tv.tv_sec * 1000000) + (tv.tv_usec));
-	moi->time_life = moi->time_start;
+	//moi->time_start = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	i = 0;
 	while (1)
 	{
@@ -134,34 +94,32 @@ int	routine(t_philo *moi)
 			return (0);
 		if (moi->id % 2 == 0)
 		{
-			eat_one(moi);
+			eat_one(&moi);
 			i++;
 		}
 		else
 		{
-			eat_two(moi);
+			eat_two(&moi);
 			i++;
+		}
+		if (check_death(moi) == 1)
+		{
+			(*(moi->dead) = 1);
 		}
 		if (*(moi->dead) == 1)
 		{
-			pthread_mutex_lock(moi->out);
 			write_status(moi, 5);
-			pthread_mutex_unlock(moi->out);
 			return (0);
 		}
-		moi->time_life = update_start();
-		moi->time_manger = 0;
+		moi->time_life = get_time();
+	//	write(2, ft_itoa(moi->time_life), ft_strlen(ft_itoa(moi->time_life)));
 		if (i == moi->inf.time_time_eat)
 		{
-			pthread_mutex_lock(moi->out);
 			write_status(moi, 4);
-			pthread_mutex_unlock(moi->out);
 			return (0);
 		}
-		pthread_mutex_lock(moi->out);
 		write_status(moi, 2);
-		pthread_mutex_unlock(moi->out);
-		usleep(moi->inf.time_sleep);
+		usleep(moi->inf.time_sleep * 1000);
 	}
 }
 
@@ -186,13 +144,31 @@ int	go_to_life(t_inf *inf)
 		i++;
 	}
 	i = 0;
+/*
+	while (1)
+	{
+		i = 0;
+		while (i < inf->nbr_p)
+		{
+			if (inf->time_die < (int)update_cur_time(&philo[i]))
+			{
+				write(2, "bite\n\n", 6);
+				*(philo[i].dead) = 1;
+				break ;
+			}
+			i++;
+		}
+		if (*(philo[i].dead) == 1)
+			break ;
+
+
+	}*/
+	i = 0;
 	while (i < inf->nbr_p)
 	{
 		pthread_join(life[i], NULL);
 		i++;
 	}
-
-
 	
 	i = 0;
 	while (i < inf->nbr_p)

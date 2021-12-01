@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: laclide <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:27:48 by laclide           #+#    #+#             */
-/*   Updated: 2021/11/30 13:45:37 by laclide          ###   ########.fr       */
+/*   Updated: 2021/12/01 18:27:47 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ int	init_timeval(t_philo **start)
 	to = cur[i].inf.nbr_p;
 	if (gettimeofday(&tv, NULL) != 0)
 		return (-1);
-	time_start = ((tv.tv_sec * 1000) + (tv.tv_usec/1000));
+	time_start = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	while (i < to)
 	{
 		cur[i].time_start = time_start;
+		cur[i].time_life = time_start;
 		i++;
 	}
 	return (0);
@@ -72,7 +73,6 @@ int	init_philo(t_philo **start, t_inf *inf, pthread_mutex_t *out, int *dead)
 	{
 		cur[i].inf = *inf;
 		cur[i].id = i;
-		cur[i].lock_r = init_lock();
 		cur[i].fork_r = init_a_fork();
 		if (cur[i].fork_r == NULL)
 		{
@@ -85,12 +85,10 @@ int	init_philo(t_philo **start, t_inf *inf, pthread_mutex_t *out, int *dead)
 		if (i != 0)
 		{
 			cur[i].fork_l = cur[i - 1].fork_r;
-			cur[i].lock_l = cur[i - 1].lock_r;
 		}
 		if (i == inf->nbr_p - 1 && inf->nbr_p - 1 != 0)
 		{
 			cur[0].fork_l = cur[i].fork_r;
-			cur[0].lock_l = cur[i].lock_r;
 		}
 		i++;
 	}

@@ -8,19 +8,20 @@ MAC_B =
 
 LIBFT = libft
 
-FLAGS 	= -g -Wall -Wextra
+FLAGS 	= -g -Wall -Wextra -lpthread
 
 LIB =  -L/usr/include
 
 SRCS =		main.c						\
 			go_to_life.c				\
 			init.c						\
-			destroy_all.c
+			destroy_all.c				\
+			utils.c
 
 SRCS_BONUS =
 
 
-CC 		= gcc
+CC 		= clang
 OBJ 	= ${SRCS:.c=.o}
 OBJS 	= *.o
 OBJ_B = ${SRCS_BONUS:.c=.o}
