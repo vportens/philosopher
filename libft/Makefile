@@ -6,7 +6,7 @@
 #    By: laclide <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/23 20:57:36 by laclide           #+#    #+#              #
-#    Updated: 2021/08/26 15:59:08 by viporten         ###   ########.fr        #
+#    Updated: 2021/12/01 21:53:32 by viporten         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ all : $(NAME)
 
 $(NAME):
 	@echo "Compiling libft.."
-	@gcc -Wall -Wextra -Werror -c $(SRC) -I $(HEAD) && ar rc $(NAME) $(OBJ)
+	@clang -Wall -Wextra -Werror -c $(SRC) -I $(HEAD) && ar rc $(NAME) $(OBJ)
 	@echo "libft Done !"
 
 clean:
