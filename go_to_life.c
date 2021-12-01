@@ -6,12 +6,34 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 00:09:59 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 00:52:16 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
+
+void	sleep_time(t_philo *moi)
+{
+	int	t;
+
+	t = 0;
+	write_status(moi, 2);
+	while (t < moi->inf.time_sleep * 1000)
+	{
+		if (moi->inf.time_sleep * 1000 - t > 5000)
+			usleep(5000);
+		else
+			usleep((moi->inf.time_sleep * 1000 - t));
+		t = t + 5000;
+		if (check_death(moi) == 1)
+		{
+			*(moi->dead) = 1;
+			return ;
+		}
+	}
+
+}
 
 void	eat_one(t_philo *moi)
 {
@@ -47,12 +69,12 @@ int	routine(t_philo *moi)
 
 	i = 0;
 	if (moi->id % 2 == 1)
-		usleep(5000);
+		usleep(10000);
 	while (1)
 	{
 		if (*(moi->dead) != 0)
 		{
-			write_status(moi, 4);
+			write_status(moi, 5);
 			return (0);
 		}
 		eat_one(moi);
@@ -68,8 +90,7 @@ int	routine(t_philo *moi)
 			write_status(moi, 4);
 			return (0);
 		}
-		write_status(moi, 2);
-		usleep(moi->inf.time_sleep * 1000);
+		sleep_time(moi);
 	}
 }
 
@@ -100,7 +121,7 @@ int	go_to_life(t_inf *inf)
 		pthread_join(life[i], NULL);
 		i++;
 	}
-	/*
+	
 	while (1)
 	{
 		i = 0;
@@ -122,7 +143,7 @@ int	go_to_life(t_inf *inf)
 
 
 	}
-	*/
+	
 	i = 0;
 
 	
