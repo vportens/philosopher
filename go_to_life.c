@@ -6,26 +6,23 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 02:05:39 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 20:20:27 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-void	sleep_time(t_philo *moi)
+void	sleep_time(t_philo *moi, int time_usleep)
 {
 	int	t;
+	unsigned long long	 time_start;
 
 	t = 0;
-	write_status(moi, " is sleeping\n", 13);
-	while (t < moi->inf.time_sleep * 1000)
+	time_start = get_time();
+	while (get_time() - time_start < (unsigned long long)time_usleep)
 	{
-		if (moi->inf.time_sleep * 1000 - t > 500)
-			usleep(500);
-		else
-			usleep((moi->inf.time_sleep * 1000 - t));
-		t = t + 500;
+		usleep(50);
 		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
@@ -45,22 +42,7 @@ void	eat_one(t_philo *moi)
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
 	write_status(moi, " is eating\n", 11);
-	while (t < real)
-	{
-		if (real - t > 50)
-			usleep(50);
-		else
-			usleep((real - t));
-		t = t + 50; // gettime pour reduire l'impresion du usleep;
-		if (check_death(moi) == 1)
-		{
-			*(moi->dead) = 1;
-			pthread_mutex_unlock(moi->fork_r);
-			pthread_mutex_unlock(moi->fork_l);
-			return ;
-		}
-		//check la mort
-	}
+	sleep_time(moi, moi->inf.time_eat);
 	write_status(moi, "end eating\n", 33);
 	pthread_mutex_unlock(moi->fork_l);
 	pthread_mutex_unlock(moi->fork_r);
@@ -93,7 +75,8 @@ int	routine(t_philo *moi)
 			write_status(moi, " end eat\n", 9);
 			return (0);
 		}
-		sleep_time(moi);
+		write_status(moi, " is sleeping\n", 22);
+		sleep_time(moi, moi->inf.time_sleep);
 		write_status(moi, " is thinking\n", 13);
 	}
 }
