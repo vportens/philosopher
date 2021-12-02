@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 01:50:52 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 20:28:12 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,10 @@ unsigned long long	get_time(void)
 	return (ret);
 }
 
-void	write_status(t_philo *moi, char *text, int len)
+void	write_status(t_philo *moi, char *text)
 {
-	char	*str;
-	char	*id;
-
 	pthread_mutex_lock(moi->out);
 	printf("%llu id : %d %s", get_time() - moi->time_start, moi->id, text);
-	//str = ft_itoa((int)(get_time() - moi->time_start));
-	//write(1, str, ft_strlen(str)); 
-	//write(1, " id : ", 6);
-	//id = ft_itoa(moi->id);
-	//write(1, id, ft_strlen(id));
-	//write(1, text, len);
 	pthread_mutex_unlock(moi->out);
 }
 

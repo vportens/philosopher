@@ -6,14 +6,14 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 20:20:27 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 20:56:09 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-void	sleep_time(t_philo *moi, int time_usleep)
+int	sleep_time(t_philo *moi, int time_usleep)
 {
 	int	t;
 	unsigned long long	 time_start;
@@ -26,10 +26,10 @@ void	sleep_time(t_philo *moi, int time_usleep)
 		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
-			return ;
+			return (1);
 		}
 	}
-
+	return (0);
 }
 
 void	eat_one(t_philo *moi)
@@ -41,9 +41,8 @@ void	eat_one(t_philo *moi)
 	real = 1000 * moi->inf.time_eat;
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
-	write_status(moi, " is eating\n", 11);
+	write_status(moi, " is eating\n");
 	sleep_time(moi, moi->inf.time_eat);
-	write_status(moi, "end eating\n", 33);
 	pthread_mutex_unlock(moi->fork_l);
 	pthread_mutex_unlock(moi->fork_r);
 }
@@ -59,7 +58,7 @@ int	routine(t_philo *moi)
 	{
 		if (*(moi->dead) != 0)
 		{
-			write_status(moi, " is dead\n", 9);
+			write_status(moi, " is dead\n");
 			return (0);
 		}
 		eat_one(moi);
@@ -67,17 +66,14 @@ int	routine(t_philo *moi)
 		moi->time_life = get_time();
 		if (*(moi->dead) == 1)
 		{
-			write_status(moi, " is dead\n", 9);
+			write_status(moi, " is dead\n");
 			return (0);
 		}
 		if (i == moi->inf.time_time_eat)
-		{
-			write_status(moi, " end eat\n", 9);
 			return (0);
-		}
-		write_status(moi, " is sleeping\n", 22);
+		write_status(moi, " is sleeping\n");
 		sleep_time(moi, moi->inf.time_sleep);
-		write_status(moi, " is thinking\n", 13);
+		write_status(moi, " is thinking\n");
 	}
 }
 
@@ -102,6 +98,7 @@ int	go_to_life(t_inf *inf)
 		pthread_create(&life[i], NULL, &routine, &philo[i]);	
 		i++;
 	}
+
 	i = 0;
 
 	while (i < inf->nbr_p)
@@ -109,13 +106,14 @@ int	go_to_life(t_inf *inf)
 		pthread_join(life[i], NULL);
 		i++;
 	}
-	
-
-	
 	i = 0;
-
-	
-	i = 0;
+	/*
+	while (i < inf->nbr_p)
+	{
+		pthread_mutex_destroy((life[i].fork_r));
+		i++;
+	}*/
+	//pthread_mutex_destroy((life[i - 1].out));
 	while (i < inf->nbr_p)
 	{
 		write(2, "gate\n", 5);
