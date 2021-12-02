@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 01:07:32 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 02:05:39 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ void	sleep_time(t_philo *moi)
 	int	t;
 
 	t = 0;
-	write_status(moi, 2);
+	write_status(moi, " is sleeping\n", 13);
 	while (t < moi->inf.time_sleep * 1000)
 	{
-		if (moi->inf.time_sleep * 1000 - t > 5000)
-			usleep(5000);
+		if (moi->inf.time_sleep * 1000 - t > 500)
+			usleep(500);
 		else
 			usleep((moi->inf.time_sleep * 1000 - t));
-		t = t + 5000;
+		t = t + 500;
 		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
@@ -37,19 +37,21 @@ void	sleep_time(t_philo *moi)
 
 void	eat_one(t_philo *moi)
 {
-	int	t;
+	unsigned long long	t;
+	unsigned long long	real;
 
 	t = 0;
+	real = 1000 * moi->inf.time_eat;
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
-	write_status(moi, 1);
-	while (t < moi->inf.time_eat * 1000)
+	write_status(moi, " is eating\n", 11);
+	while (t < real)
 	{
-		if (moi->inf.time_eat * 1000 - t > 5000)
-			usleep(5000);
+		if (real - t > 50)
+			usleep(50);
 		else
-			usleep((moi->inf.time_eat * 1000 - t));
-		t = t + 5000;
+			usleep((real - t));
+		t = t + 50; // gettime pour reduire l'impresion du usleep;
 		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
@@ -59,6 +61,7 @@ void	eat_one(t_philo *moi)
 		}
 		//check la mort
 	}
+	write_status(moi, "end eating\n", 33);
 	pthread_mutex_unlock(moi->fork_l);
 	pthread_mutex_unlock(moi->fork_r);
 }
@@ -74,7 +77,7 @@ int	routine(t_philo *moi)
 	{
 		if (*(moi->dead) != 0)
 		{
-			write_status(moi, 5);
+			write_status(moi, " is dead\n", 9);
 			return (0);
 		}
 		eat_one(moi);
@@ -82,16 +85,16 @@ int	routine(t_philo *moi)
 		moi->time_life = get_time();
 		if (*(moi->dead) == 1)
 		{
-			write_status(moi, 5);
+			write_status(moi, " is dead\n", 9);
 			return (0);
 		}
 		if (i == moi->inf.time_time_eat)
 		{
-			write_status(moi, 4);
+			write_status(moi, " end eat\n", 9);
 			return (0);
 		}
 		sleep_time(moi);
-		write_status(moi, 3);
+		write_status(moi, " is thinking\n", 13);
 	}
 }
 
@@ -110,6 +113,7 @@ int	go_to_life(t_inf *inf)
 	if (ret != 0)
 		return (ret);
 	life = malloc(sizeof(pthread_t) * inf->nbr_p);
+	init_timeval(&philo);
 	while (i < inf->nbr_p)
 	{
 		pthread_create(&life[i], NULL, &routine, &philo[i]);	
@@ -123,27 +127,7 @@ int	go_to_life(t_inf *inf)
 		i++;
 	}
 	
-	while (1)
-	{
-		i = 0;
-		while (i < inf->nbr_p)
-		{
-			if (check_death(&(philo[i])) == 1)
-			{
-			//	write(2, "bite\n\n", 6);
-				*(philo[i].dead) = 1;
-		//		write_status(&(philo[i]), 5);
-				i = -1;
-				break ;
-			}
-			i++;
-		}
-	//	if (*(philo[i].dead) == 1)
-		if (i == -1)
-			break ;
 
-
-	}
 	
 	i = 0;
 

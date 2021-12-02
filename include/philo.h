@@ -40,7 +40,8 @@ int	free_defore_init_fork(t_philo **start, pthread_mutex_t *out, int *dead, int 
 
 int	check_death(t_philo *moi);
 unsigned long long	get_time(void);
-void	write_status(t_philo *moi, int status);
 void	write_shit(char *str, t_philo *moi);
+void	write_status(t_philo *moi, char *text, int len);
+int	init_timeval(t_philo **start);
 
 #endif
