@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 00:52:16 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/02 01:07:32 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	routine(t_philo *moi)
 			return (0);
 		}
 		sleep_time(moi);
+		write_status(moi, 3);
 	}
 }
 
