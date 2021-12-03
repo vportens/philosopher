@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/04 00:08:18 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/04 00:48:27 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	write_status(t_philo *moi, char *text)
 {
 	pthread_mutex_lock(moi->out);
 	{
-		printf("%llu id : %d %s", get_time()
+		printf("%llu %d %s", get_time()
 			- moi->time_start, moi->id + 1, text);
 	}
 	pthread_mutex_unlock(moi->out);

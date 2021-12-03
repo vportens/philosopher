@@ -8,7 +8,7 @@ MAC_B =-fsanitize=thread
 
 LIBFT = libft
 
-FLAGS 	= -g3 -Wall -Wextra -lpthread #-fsanitize=thread
+FLAGS 	= -g3 -Wall -Wextra #-lpthread #-fsanitize=thread
 
 LIB =  -L/usr/include
 
@@ -34,11 +34,11 @@ all :
 	@make $(NAME)
 
 .c.o:
-	${CC} ${FLAGS} -c $< -o ${<:.c=.o} -I include/
+	${CC} ${FLAGS}  -o ${<:.c=.o} -c $< -I include/ -pthread
 
 
 $(NAME)	: $(OBJ)
-	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ) libft/libft.a -o $(NAME) $(LIB)
+	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ) libft/libft.a -o $(NAME) $(LIB) -lpthread
 
 $(NAME_B) : $(OBJ_B)
 	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ_B) libft/libft.a -o $(NAME_B)

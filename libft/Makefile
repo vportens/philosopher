@@ -3,17 +3,30 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: laclide <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: viporten <viporten@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/23 20:57:36 by laclide           #+#    #+#              #
-#    Updated: 2021/12/01 21:53:32 by viporten         ###   ########.fr        #
+#    Updated: 2021/12/04 00:21:52 by viporten         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = libft.a
 
-SRC = *.c 
+SRC = 	atoi.c		\
+		itoa.c		\
+		memalloc.c	\
+		memset.c	\
+		str_new.c	\
+		strcat.c	\
+		strcpy.c	\
+		strdup.c	\
+		strjoin.c	\
+		strlen.c	\
+		strncmp.c	\
+		strsplit.c	\
+		strsub.c	\
+		true_atoi.c
 
 OBJ = *.o
 
