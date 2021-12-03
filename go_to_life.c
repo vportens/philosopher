@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 23:54:23 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/04 00:00:29 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 int	sleep_time(t_philo *moi, int time_usleep)
 {
-	int	t;
-	unsigned long long	 time_start;
+	int					t;
+	unsigned long long	time_start;
 
 	t = 0;
 	time_start = get_time();
@@ -69,12 +69,10 @@ void	eat_one(t_philo *moi)
 	pthread_mutex_unlock(moi->fork_r);
 }
 
-
-
 void	*routine(void *x)
 {
-	int					i;
-	t_philo *moi;
+	int		i;
+	t_philo	*moi;
 
 	i = 0;
 	moi = (t_philo *)x;
@@ -102,8 +100,8 @@ void	*routine(void *x)
 
 void	*solo(void *x)
 {
-	t_philo *moi;
-	
+	t_philo	*moi;
+
 	moi = (t_philo *)x;
 	while (1)
 	{
@@ -126,11 +124,14 @@ void	life_become_reality(pthread_t *life, t_philo *philo, t_inf *inf)
 
 	i = 0;
 	if (inf->nbr_p == 1)
-
-	while (i < inf->nbr_p)
+		pthread_create(&life[i], NULL, &solo, &philo[i]);
+	else
 	{
-		pthread_create(&life[i], NULL, &solo, &philo[i]);	
-		i++;
+		while (i < inf->nbr_p)
+		{
+			pthread_create(&life[i], NULL, &routine, &philo[i]);
+			i++;
+		}
 	}
 	i = 0;
 	while (i < inf->nbr_p)
@@ -149,7 +150,7 @@ int	go_to_life(t_inf *inf)
 	int				ret;
 	int				i;
 	pthread_t		*life;
-	
+
 	i = 0;
 	philo = malloc(sizeof(t_philo) * (inf->nbr_p));
 	if (philo == NULL)
