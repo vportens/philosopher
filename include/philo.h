@@ -32,17 +32,18 @@ struct	s_philo
 	pthread_mutex_t	*out;
 };
 
-int	go_to_life(t_inf *inf);
+int					go_to_life(t_inf *inf);
 
-int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf);
+int					init_and_deal_fork_to_philo(t_philo **start, t_inf *inf);
 
-void	destroy_all_mutex(t_philo **start, int nbr_to_destroy);
-int	free_defore_init_fork(t_philo **start, pthread_mutex_t *out, int *dead, int ret);
+void				destroy_all_mutex(t_philo **start, int nbr_to_destroy);
+int					free_defore_init_fork(t_philo **start, pthread_mutex_t *out, int *dead, int ret);
 
-int	check_death(t_philo *moi);
+int					check_death(t_philo *moi);
 unsigned long long	get_time(void);
-void	write_shit(char *str, t_philo *moi);
-void	write_status(t_philo *moi, char *text);
-int	init_timeval(t_philo **start);
+void				write_shit(char *str, t_philo *moi);
+void				write_status(t_philo *moi, char *text);
+int					init_timeval(t_philo **start);
+int					check_someone_dead(t_philo *moi);
 
 #endif

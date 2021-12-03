@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 18:19:32 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 22:09:04 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,17 @@ int	check_death(t_philo *moi)
 
 }
 
+int	check_someone_dead(t_philo *moi)
+{
+	pthread_mutex_lock(moi->are_u_alive);
+	if (*(moi->dead) == 1)
+	{
+		pthread_mutex_unlock(moi->are_u_alive);
+		return (1);
+	}
+	pthread_mutex_unlock(moi->are_u_alive);
+	return (0);
+}
 unsigned long long	get_time(void)
 {
 	struct timeval	tv;
@@ -40,7 +51,7 @@ void	write_status(t_philo *moi, char *text)
 {
 	pthread_mutex_lock(moi->out);
 	{
-		printf("%llu id : %d %s", get_time() - moi->time_start, moi->id, text);
+		printf("%llu id : %d %s", get_time() - moi->time_start, moi->id + 1, text);
 	}
 	pthread_mutex_unlock(moi->out);
 }

@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:27:48 by laclide           #+#    #+#             */
-/*   Updated: 2021/12/03 17:44:06 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 22:28:19 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,9 @@ int	init_philo(t_philo **start, t_inf *inf, pthread_mutex_t *out, int *dead)
 		cur[i].out = out;
 		cur[i].dead = dead;
 		if (i != 0)
-		{
 			cur[i].fork_l = cur[i - 1].fork_r;
-		}
 		if (i == inf->nbr_p - 1 && inf->nbr_p - 1 != 0)
-		{
 			cur[0].fork_l = cur[i].fork_r;
-		}
 		i++;
 	}
 	return (0);
@@ -124,7 +120,6 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 	t_philo 		*cur;
 	pthread_mutex_t *out;
 	int				*dead;
-	int				i;
 
 	cur = *start;
 	out = malloc(sizeof(pthread_mutex_t));
@@ -134,7 +129,6 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 	if (dead == NULL)
 		return (free_defore_init_fork(start, out, NULL, 50));
 	*dead = 0;
-	i = 0;
 	if (pthread_mutex_init(out, 0) != 0)
 		return (free_defore_init_fork(start, out, dead, 70));
 	if (init_philo(start, inf, out, dead) != 0)

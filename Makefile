@@ -8,7 +8,7 @@ MAC_B =-fsanitize=thread
 
 LIBFT = libft
 
-FLAGS 	= -g3 -Wall -Wextra -lpthread 
+FLAGS 	= -g3 -Wall -Wextra -lpthread #-fsanitize=thread
 
 LIB =  -L/usr/include
 

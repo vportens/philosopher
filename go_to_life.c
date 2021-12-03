@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 18:57:14 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 22:24:09 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	sleep_time(t_philo *moi, int time_usleep)
 			pthread_mutex_unlock(moi->are_u_alive);
 			return (1);
 		}
-			pthread_mutex_unlock(moi->are_u_alive);
+		pthread_mutex_unlock(moi->are_u_alive);
 	}
 	return (0);
 }
@@ -49,6 +49,8 @@ void	eat_one(t_philo *moi)
 	if (*(moi->dead) == 1)
 	{
 		pthread_mutex_unlock(moi->are_u_alive);
+		pthread_mutex_unlock(moi->fork_l);
+		pthread_mutex_unlock(moi->fork_r);
 		return ;
 	}
 	if (check_death(moi) == 1)
@@ -56,6 +58,8 @@ void	eat_one(t_philo *moi)
 		*(moi->dead) = 1;
 		write_status(moi, " is dead\n");
 		pthread_mutex_unlock(moi->are_u_alive);
+		pthread_mutex_unlock(moi->fork_l);
+		pthread_mutex_unlock(moi->fork_r);
 		return ;
 	}
 	pthread_mutex_unlock(moi->are_u_alive);
@@ -65,38 +69,35 @@ void	eat_one(t_philo *moi)
 	pthread_mutex_unlock(moi->fork_r);
 }
 
-int	routine(t_philo *moi)
+
+
+void	*routine(void *x)
 {
 	int					i;
+	t_philo *moi;
 
 	i = 0;
+	moi = (t_philo *)x;
 	if (moi->id % 2 == 1)
 		usleep(10000);
 	while (1)
 	{
-		pthread_mutex_lock(moi->are_u_alive);
-		if (*(moi->dead) != 0)
-		{
-			pthread_mutex_unlock(moi->are_u_alive);
-			return (0);
-		}
-		pthread_mutex_unlock(moi->are_u_alive);
+		if (check_someone_dead(moi) == 1)
+			return (NULL);
 		eat_one(moi);
 		i++;
 		moi->time_life = get_time();
-//		pthread_mutex_lock(moi->are_u_alive);
-		if (*(moi->dead) == 1)
-		{
-//		pthread_mutex_unlock(moi->are_u_alive);
-			return (0);
-		}
-//		pthread_mutex_unlock(moi->are_u_alive);
+		if (check_someone_dead(moi) == 1)
+			return (NULL);
 		if (i == moi->inf.time_time_eat)
-			return (0);
+			return (NULL);
 		write_status(moi, " is sleeping\n");
 		sleep_time(moi, moi->inf.time_sleep);
+		if (check_someone_dead(moi) == 1)
+			return (NULL);
 		write_status(moi, " is thinking\n");
 	}
+	return (NULL);
 }
 
 int	go_to_life(t_inf *inf)
@@ -120,9 +121,7 @@ int	go_to_life(t_inf *inf)
 		pthread_create(&life[i], NULL, &routine, &philo[i]);	
 		i++;
 	}
-
 	i = 0;
-
 	while (i < inf->nbr_p)
 	{
 		pthread_join(life[i], NULL);
@@ -135,13 +134,7 @@ int	go_to_life(t_inf *inf)
 		pthread_mutex_destroy(philo[i].fork_r);
 		i++;
 	}
-	//pthread_mutex_destroy((life[i - 1].out));
-	while (i < inf->nbr_p)
-	{
-		write(2, "gate\n", 5);
-		printf("philo id : %d\n", philo[i].id);
-		i++;
-	}
+	pthread_mutex_destroy((philo[i - 1].out));
+	pthread_mutex_destroy((philo[i - 1].are_u_alive));
 	return (0);
-
 }
