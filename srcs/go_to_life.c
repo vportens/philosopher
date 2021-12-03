@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/04 00:52:41 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/04 00:55:26 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	eat_one(t_philo *moi)
 	}
 	if (check_death(moi) == 1)
 	{
-		*(moi->dead) = 1;
 		write_status(moi, " died\n");
 		pthread_mutex_unlock(moi->are_u_alive);
 		pthread_mutex_unlock(moi->fork_l);

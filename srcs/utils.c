@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/04 00:48:27 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/04 00:55:23 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	check_death(t_philo *moi)
 	gettimeofday(&tv, NULL);
 	ret = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - moi->time_life;
 	if (ret >= moi->inf.time_die)
+	{
+		*(moi->dead) = 1;
 		return (1);
+	}
 	return (0);
 }
 
