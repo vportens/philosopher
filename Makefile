@@ -12,11 +12,12 @@ FLAGS 	= -g3 -Wall -Wextra -lpthread #-fsanitize=thread
 
 LIB =  -L/usr/include
 
-SRCS =		main.c						\
-			go_to_life.c				\
-			init.c						\
-			destroy_all.c				\
-			utils.c
+SRCS =		srcs/main.c						\
+			srcs/go_to_life.c				\
+			srcs/init.c						\
+			srcs/destroy_all.c				\
+			srcs/utils.c						\
+			srcs/waiting_fonction.c
 
 SRCS_BONUS =
 

@@ -49,4 +49,6 @@ int					*init_lock(void);
 
 int					destroy_all(t_philo *philo, t_inf *inf);
 
+int					sleep_time(t_philo *moi, int time_usleep);
+
 #endif
