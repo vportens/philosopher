@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 22:09:04 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 23:32:59 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,13 @@ void	write_status(t_philo *moi, char *text)
 	pthread_mutex_unlock(moi->out);
 }
 
-void	write_shit(char *t, t_philo *moi)
+int	*init_lock(void)
 {
-	char	*str;
+	int	*new;
 
-	pthread_mutex_lock(moi->out);
-	str = ft_itoa((int)(get_time() - moi->time_start));
-	write(1, str, ft_strlen(str)); 
-	write(1, t, ft_strlen(t));
-	pthread_mutex_unlock(moi->out);
-
+	new = malloc(sizeof(int));
+	if (new == NULL)
+		return (NULL);
+	*new = 0;
+	return (new);
 }

@@ -45,5 +45,6 @@ void				write_shit(char *str, t_philo *moi);
 void				write_status(t_philo *moi, char *text);
 int					init_timeval(t_philo **start);
 int					check_someone_dead(t_philo *moi);
+int					*init_lock(void);
 
 #endif

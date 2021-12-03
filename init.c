@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:27:48 by laclide           #+#    #+#             */
-/*   Updated: 2021/12/03 22:41:37 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 23:34:04 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 pthread_mutex_t	*init_a_fork(void)
 {
-	pthread_mutex_t *fork;
-	
+	pthread_mutex_t	*fork;
+
 	fork = malloc(sizeof(pthread_mutex_t));
 	if (fork == NULL)
 		return (NULL);
@@ -51,20 +51,9 @@ int	init_timeval(t_philo **start)
 	return (0);
 }
 
-int	*init_lock(void)
-{
-	int	*new;
-
-	new = malloc(sizeof(int));
-	if (new == NULL)
-		return (NULL);
-	*new = 0;
-	return (new);
-}
-
 int	init_philo(t_philo **start, t_inf *inf, pthread_mutex_t *out, int *dead)
 {
-	t_philo *cur;
+	t_philo	*cur;
 	int		i;
 
 	cur = *start;
@@ -91,13 +80,11 @@ int	init_philo(t_philo **start, t_inf *inf, pthread_mutex_t *out, int *dead)
 	return (0);
 }
 
-int	init_are_u_alive(t_philo **start, t_inf *inf)
+int	init_are_u_alive(t_philo **start, t_inf *inf, int i)
 {
-	int	i;
 	pthread_mutex_t	*are_u_alive;
 	t_philo			*cur;
 
-	i = 0;
 	cur = *start;
 	are_u_alive = malloc(sizeof(pthread_mutex_t));
 	if (are_u_alive == NULL)
@@ -113,7 +100,7 @@ int	init_are_u_alive(t_philo **start, t_inf *inf)
 		free(are_u_alive);
 		return (70);
 	}
-	while (i < inf->nbr_p) 
+	while (i < inf->nbr_p)
 	{
 		cur[i].are_u_alive = are_u_alive;
 		i++;
@@ -123,8 +110,8 @@ int	init_are_u_alive(t_philo **start, t_inf *inf)
 
 int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 {
-	t_philo 		*cur;
-	pthread_mutex_t *out;
+	t_philo			*cur;
+	pthread_mutex_t	*out;
 	int				*dead;
 
 	cur = *start;
@@ -139,7 +126,7 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 		return (free_defore_init_fork(start, out, dead, 70));
 	if (init_philo(start, inf, out, dead) != 0)
 		return (70);
-	if (init_are_u_alive(start, inf) != 0)
+	if (init_are_u_alive(start, inf, 0) != 0)
 		return (free_defore_init_fork(start, out, dead, 70));
 	if (init_timeval(start) == -1)
 	{
@@ -149,4 +136,3 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 	}
 	return (0);
 }
-
