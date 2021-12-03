@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 22:27:57 by viporten          #+#    #+#             */
-/*   Updated: 2021/11/30 13:53:55 by laclide          ###   ########.fr       */
+/*   Updated: 2021/12/03 23:35:40 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ int	parsing(int ac, char **av, t_inf *inf)
 		return (0);
 	if (ac == 6)
 		if (!ft_true_atoi(&(inf->time_time_eat), av[5])
-				|| inf->time_time_eat <= 0)
+			|| inf->time_time_eat <= 0)
 			return (0);
-
 	return (1);
 }
 
@@ -56,8 +55,6 @@ int	main(int ac, char **av)
 		write(2, "bad arg\n", 8);
 		return (1);
 	}
-	printf("philo : %d %d %d %d %d\n",inf.nbr_p,inf.time_die,inf.time_eat,inf.time_sleep,inf.time_time_eat);
-	printf("ret gotolife : %d\n", go_to_life(&inf));
-
-
+	go_to_life(&inf);
+	return (0);
 }

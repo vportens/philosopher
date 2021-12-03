@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:52:51 by laclide           #+#    #+#             */
-/*   Updated: 2021/12/03 23:30:24 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 23:41:11 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,15 @@ void	destroy_all_mutex(t_philo **start, int nbr_to_destroy)
 		free(cur[i].fork_r);
 		i++;
 	}
+}
+
+int	destroy_all(t_philo *philo, t_inf *inf)
+{
+	destroy_all_mutex(&philo, inf->nbr_p);
+	pthread_mutex_destroy(philo->out);
+	pthread_mutex_destroy(philo->are_u_alive);
+	free(philo->dead);
+	free(philo->are_u_alive);
+	free_defore_init_fork(&philo, philo->out, NULL, 50);
+	return (50);
 }

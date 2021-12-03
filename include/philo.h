@@ -47,4 +47,6 @@ int					init_timeval(t_philo **start);
 int					check_someone_dead(t_philo *moi);
 int					*init_lock(void);
 
+int					destroy_all(t_philo *philo, t_inf *inf);
+
 #endif

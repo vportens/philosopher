@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 22:39:55 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 23:54:23 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,49 @@ void	*routine(void *x)
 	return (NULL);
 }
 
+void	*solo(void *x)
+{
+	t_philo *moi;
+	
+	moi = (t_philo *)x;
+	while (1)
+	{
+		usleep(50);
+		pthread_mutex_lock(moi->are_u_alive);
+		if (check_death(moi) == 1)
+		{
+			*(moi->dead) = 1;
+			write_status(moi, "is dead\n");
+			pthread_mutex_unlock(moi->are_u_alive);
+			return (NULL);
+		}
+		pthread_mutex_unlock(moi->are_u_alive);
+	}
+}
+
+void	life_become_reality(pthread_t *life, t_philo *philo, t_inf *inf)
+{
+	int	i;
+
+	i = 0;
+	if (inf->nbr_p == 1)
+
+	while (i < inf->nbr_p)
+	{
+		pthread_create(&life[i], NULL, &solo, &philo[i]);	
+		i++;
+	}
+	i = 0;
+	while (i < inf->nbr_p)
+	{
+		pthread_join(life[i], NULL);
+		i++;
+	}
+	i = 0;
+	destroy_all(philo, inf);
+	free(life);
+}
+
 int	go_to_life(t_inf *inf)
 {
 	t_philo			*philo;
@@ -116,42 +159,8 @@ int	go_to_life(t_inf *inf)
 		return (ret);
 	life = malloc(sizeof(pthread_t) * inf->nbr_p);
 	if (life == NULL)
-	{
-		destroy_all_mutex(&philo, inf->nbr_p);
-		pthread_mutex_destroy(philo->out);
-		pthread_mutex_destroy(philo->are_u_alive);
-		free(philo->dead);
-		free(philo->are_u_alive);
-		free_defore_init_fork(&philo, philo->out, NULL, 50);
-		return (50);
-	}
+		return (destroy_all(philo, inf));
 	init_timeval(&philo);
-	while (i < inf->nbr_p)
-	{
-		pthread_create(&life[i], NULL, &routine, &philo[i]);	
-		i++;
-	}
-	i = 0;
-	while (i < inf->nbr_p)
-	{
-		pthread_join(life[i], NULL);
-		i++;
-	}
-	i = 0;
-	
-	while (i < inf->nbr_p)
-	{
-		pthread_mutex_destroy(philo[i].fork_r);
-		free(philo[i].fork_r);
-		i++;
-	}
-	pthread_mutex_destroy((philo[i - 1].out));
-	pthread_mutex_destroy((philo[i - 1].are_u_alive));
-	free(philo->dead);
-	free(philo->out);
-	free(philo->are_u_alive);
-	free(philo);
-	free(life);
-
+	life_become_reality(life, philo, inf);
 	return (0);
 }
