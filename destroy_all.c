@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   destoy_all.c                                       :+:      :+:    :+:   */
+/*   destroy_all.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: laclide <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:52:51 by laclide           #+#    #+#             */
-/*   Updated: 2021/11/30 11:13:12 by laclide          ###   ########.fr       */
+/*   Updated: 2021/12/03 22:40:12 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 int	free_defore_init_fork(t_philo **start, pthread_mutex_t *out, int *dead, int ret)
 {
-	if (*start)
-		free(*start);
+
 	if (out)
 		free(out);
 	if (dead)
 		free(dead);
+	if (*start)
+		free(*start);
 	return (ret);
 }
 

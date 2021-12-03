@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 10:27:48 by laclide           #+#    #+#             */
-/*   Updated: 2021/12/03 22:28:19 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 22:41:37 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,15 @@ int	init_are_u_alive(t_philo **start, t_inf *inf)
 	cur = *start;
 	are_u_alive = malloc(sizeof(pthread_mutex_t));
 	if (are_u_alive == NULL)
+	{
+		destroy_all_mutex(start, inf->nbr_p);
+		pthread_mutex_destroy((*start)->out);
 		return (50);
+	}
 	if (pthread_mutex_init(are_u_alive, NULL) != 0)
 	{
+		destroy_all_mutex(start, inf->nbr_p);
+		pthread_mutex_destroy((*start)->out);
 		free(are_u_alive);
 		return (70);
 	}
@@ -134,7 +140,7 @@ int	init_and_deal_fork_to_philo(t_philo **start, t_inf *inf)
 	if (init_philo(start, inf, out, dead) != 0)
 		return (70);
 	if (init_are_u_alive(start, inf) != 0)
-		return (70);
+		return (free_defore_init_fork(start, out, dead, 70));
 	if (init_timeval(start) == -1)
 	{
 		destroy_all_mutex(start, inf->nbr_p);

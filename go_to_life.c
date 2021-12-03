@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/03 22:24:09 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 22:39:55 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,16 @@ int	go_to_life(t_inf *inf)
 	if (ret != 0)
 		return (ret);
 	life = malloc(sizeof(pthread_t) * inf->nbr_p);
+	if (life == NULL)
+	{
+		destroy_all_mutex(&philo, inf->nbr_p);
+		pthread_mutex_destroy(philo->out);
+		pthread_mutex_destroy(philo->are_u_alive);
+		free(philo->dead);
+		free(philo->are_u_alive);
+		free_defore_init_fork(&philo, philo->out, NULL, 50);
+		return (50);
+	}
 	init_timeval(&philo);
 	while (i < inf->nbr_p)
 	{
@@ -132,9 +142,16 @@ int	go_to_life(t_inf *inf)
 	while (i < inf->nbr_p)
 	{
 		pthread_mutex_destroy(philo[i].fork_r);
+		free(philo[i].fork_r);
 		i++;
 	}
 	pthread_mutex_destroy((philo[i - 1].out));
 	pthread_mutex_destroy((philo[i - 1].are_u_alive));
+	free(philo->dead);
+	free(philo->out);
+	free(philo->are_u_alive);
+	free(philo);
+	free(life);
+
 	return (0);
 }
