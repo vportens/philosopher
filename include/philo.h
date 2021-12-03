@@ -23,6 +23,7 @@ struct	s_philo
 {
 	int 	id;
 	int		*dead;
+	pthread_mutex_t *are_u_alive;
 	t_inf	inf;
 	unsigned long long	time_start;
 	unsigned long long	time_life;

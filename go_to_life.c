@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 20:56:09 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 18:57:14 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,42 @@ int	sleep_time(t_philo *moi, int time_usleep)
 	while (get_time() - time_start < (unsigned long long)time_usleep)
 	{
 		usleep(50);
+		pthread_mutex_lock(moi->are_u_alive);
+		if (*(moi->dead) == 1)
+		{
+			pthread_mutex_unlock(moi->are_u_alive);
+			return (1);
+		}
 		if (check_death(moi) == 1)
 		{
 			*(moi->dead) = 1;
+			write_status(moi, "is dead\n");
+			pthread_mutex_unlock(moi->are_u_alive);
 			return (1);
 		}
+			pthread_mutex_unlock(moi->are_u_alive);
 	}
 	return (0);
 }
 
 void	eat_one(t_philo *moi)
 {
-	unsigned long long	t;
-	unsigned long long	real;
-
-	t = 0;
-	real = 1000 * moi->inf.time_eat;
 	pthread_mutex_lock(moi->fork_r);
 	pthread_mutex_lock(moi->fork_l);
+	pthread_mutex_lock(moi->are_u_alive);
+	if (*(moi->dead) == 1)
+	{
+		pthread_mutex_unlock(moi->are_u_alive);
+		return ;
+	}
+	if (check_death(moi) == 1)
+	{
+		*(moi->dead) = 1;
+		write_status(moi, " is dead\n");
+		pthread_mutex_unlock(moi->are_u_alive);
+		return ;
+	}
+	pthread_mutex_unlock(moi->are_u_alive);
 	write_status(moi, " is eating\n");
 	sleep_time(moi, moi->inf.time_eat);
 	pthread_mutex_unlock(moi->fork_l);
@@ -56,19 +74,23 @@ int	routine(t_philo *moi)
 		usleep(10000);
 	while (1)
 	{
+		pthread_mutex_lock(moi->are_u_alive);
 		if (*(moi->dead) != 0)
 		{
-			write_status(moi, " is dead\n");
+			pthread_mutex_unlock(moi->are_u_alive);
 			return (0);
 		}
+		pthread_mutex_unlock(moi->are_u_alive);
 		eat_one(moi);
 		i++;
 		moi->time_life = get_time();
+//		pthread_mutex_lock(moi->are_u_alive);
 		if (*(moi->dead) == 1)
 		{
-			write_status(moi, " is dead\n");
+//		pthread_mutex_unlock(moi->are_u_alive);
 			return (0);
 		}
+//		pthread_mutex_unlock(moi->are_u_alive);
 		if (i == moi->inf.time_time_eat)
 			return (0);
 		write_status(moi, " is sleeping\n");
@@ -107,12 +129,12 @@ int	go_to_life(t_inf *inf)
 		i++;
 	}
 	i = 0;
-	/*
+	
 	while (i < inf->nbr_p)
 	{
-		pthread_mutex_destroy((life[i].fork_r));
+		pthread_mutex_destroy(philo[i].fork_r);
 		i++;
-	}*/
+	}
 	//pthread_mutex_destroy((life[i - 1].out));
 	while (i < inf->nbr_p)
 	{

@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 17:43:34 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/02 20:28:12 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/03 18:19:32 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	check_death(t_philo *moi)
 
 	gettimeofday(&tv, NULL);
 	ret = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - moi->time_life;
-	if (ret > moi->inf.time_die)
+	if (ret >= moi->inf.time_die)
 		return (1);
 	return (0);
 
@@ -39,7 +39,9 @@ unsigned long long	get_time(void)
 void	write_status(t_philo *moi, char *text)
 {
 	pthread_mutex_lock(moi->out);
-	printf("%llu id : %d %s", get_time() - moi->time_start, moi->id, text);
+	{
+		printf("%llu id : %d %s", get_time() - moi->time_start, moi->id, text);
+	}
 	pthread_mutex_unlock(moi->out);
 }
 
