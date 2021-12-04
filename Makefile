@@ -4,11 +4,11 @@ NAME_B = philo_bonus
 
 MAC =
 
-MAC_B =-fsanitize=thread
+MAC_B =
 
 LIBFT = libft
 
-FLAGS 	= -g3 -Wall -Wextra #-lpthread #-fsanitize=thread
+FLAGS 	= -g3 -Wall -Wextra -Werror 
 
 LIB =  -L/usr/include
 

@@ -6,7 +6,7 @@
 /*   By: viporten <viporten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 05:06:13 by viporten          #+#    #+#             */
-/*   Updated: 2021/12/04 00:55:26 by viporten         ###   ########.fr       */
+/*   Updated: 2021/12/04 02:55:35 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	*solo(void *x)
 	t_philo	*moi;
 
 	moi = (t_philo *)x;
+	write_status(moi, " has taken a fork\n");
 	while (1)
 	{
 		usleep(50);
