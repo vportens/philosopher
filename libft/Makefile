@@ -6,7 +6,7 @@
 #    By: viporten <viporten@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/23 20:57:36 by laclide           #+#    #+#              #
-#    Updated: 2021/12/04 00:21:52 by viporten         ###   ########.fr        #
+#    Updated: 2021/12/04 03:13:36 by viporten         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,18 +35,14 @@ HEAD = ./includes
 all : $(NAME)
 
 $(NAME):
-	@echo "Compiling libft.."
-	@clang -Wall -Wextra -Werror -c $(SRC) -I $(HEAD) && ar rc $(NAME) $(OBJ)
-	@echo "libft Done !"
+	clang -Wall -Wextra -Werror -c $(SRC) -I $(HEAD) && ar rc $(NAME) $(OBJ)
 
 clean:
-	@echo "Remove libft *.o  ..."
-	@/bin/rm -f $(OBJ)
-	@echo "Done !"
+	/bin/rm -f $(OBJ)
 
 fclean: clean
-	@echo "Remove lib ..."
-	@/bin/rm -f $(NAME)
-	@echo "Done !" 
+	/bin/rm -f $(NAME)
 
 re: fclean all
+
+.PHONY : all re clean fclean

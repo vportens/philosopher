@@ -30,38 +30,40 @@ OBJS_B = *.o
 
 
 all :
-	@make -C $(LIBFT)
-	@make $(NAME)
+	make -C $(LIBFT)
+	make $(NAME)
 
 .c.o:
 	${CC} ${FLAGS}  -o ${<:.c=.o} -c $< -I include/ -pthread
 
 
 $(NAME)	: $(OBJ)
-	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ) libft/libft.a -o $(NAME) $(LIB) -lpthread
+	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ) libft/libft.a -o $(NAME) $(LIB) -pthread
 
 $(NAME_B) : $(OBJ_B)
 	$(CC) $(FLAGS) -I libft/includes/ -I include/. $(OBJ_B) libft/libft.a -o $(NAME_B)
 
 clean :
-		@make clean -C $(LIBFT)
-		@rm -rf $(OBJ)
-		@rm -rf $(OBJ_B)
+		make clean -C $(LIBFT)
+		rm -rf $(OBJ)
+		rm -rf $(OBJ_B)
 
 fclean : clean
-		@rm -rf libft.a
-		@make fclean -C $(LIBFT)
-		@rm -rf $(OBJS)
-		@rm -rf $(OBJS_B)
-		@rm -rf $(NAME)
-		@rm -rf $(NAME_B)
+		rm -rf libft.a
+		make fclean -C $(LIBFT)
+		rm -rf $(OBJS)
+		rm -rf $(OBJS_B)
+		rm -rf $(NAME)
+		rm -rf $(NAME_B)
 
 relinux : fclean LINUX
 
 re : fclean all
 
 bonus :
-		@make -C $(LIBFT)
-		@make ${NAME_B}
+		make -C $(LIBFT)
+		make ${NAME_B}
 
 rebonus : fclean bonus
+
+.PHONY : all clean re fclean
